@@ -60,6 +60,18 @@ export async function getRoomInfo(
 
   const data = res.data.data
   const room = data.data[0]
+
+  if (room.stream_url == null) {
+    return {
+      living: false,
+      roomId: webRoomId,
+      owner: data.user.nickname,
+      title: room.title,
+      streams: [],
+      sources: [],
+    }
+  }
+
   const {
     options: { qualities },
     stream_data,
@@ -114,7 +126,7 @@ interface EnterRoomApiResp {
         cover: {
           url_list: string[]
         }
-        stream_url: {
+        stream_url?: {
           flv_pull_url: PullURLMap
           default_resolution: string
           hls_pull_url_map: PullURLMap
