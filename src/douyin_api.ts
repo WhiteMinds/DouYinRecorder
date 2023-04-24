@@ -22,8 +22,8 @@ export async function getRoomInfo(
   streams: StreamProfile[]
   sources: SourceProfile[]
 }> {
-    // 抖音的 enter api 会需要 twid 的 cookie，这个 cookie 是由这个请求的响应头设置的，
-    // 所以在这里请求一次自动设置
+    // 抖音的 'webcast/room/web/enter' api 会需要 ttwid 的 cookie，这个 cookie 是由这个请求的响应头设置的，
+    // 所以在这里请求一次自动设置。
     await requester.get(
         'https://live.douyin.com/',
     )
