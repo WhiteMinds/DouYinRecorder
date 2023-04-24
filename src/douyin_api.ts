@@ -2,6 +2,7 @@ import axios from 'axios'
 import { wrapper } from 'axios-cookiejar-support'
 import { CookieJar } from 'tough-cookie'
 import { assert } from './utils'
+
 const jar = new CookieJar()
 const requester = wrapper(
   axios.create({
@@ -18,9 +19,11 @@ export async function getRoomInfo(
   roomId: string
   owner: string
   title: string
-  streams: StreamProfile[] 
+  streams: StreamProfile[]
   sources: SourceProfile[]
 }> {
+    // 抖音的 enter api 会需要 twid 的 cookie，这个 cookie 是由这个请求的响应头设置的，
+    // 所以在这里请求一次自动设置
     await requester.get(
         'https://live.douyin.com/',
     )
@@ -55,7 +58,8 @@ export async function getRoomInfo(
     // resp 自动设置 cookie
     await requester.get('https://live.douyin.com/favicon.ico')
     return getRoomInfo(webRoomId, false)
-  }   
+  }
+  
   assert(
     res.data.status_code === 0,
     `Unexpected resp, code ${res.data.status_code}, msg ${res.data.data}`
