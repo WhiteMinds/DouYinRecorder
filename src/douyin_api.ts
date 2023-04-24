@@ -2,7 +2,6 @@ import axios from 'axios'
 import { wrapper } from 'axios-cookiejar-support'
 import { CookieJar } from 'tough-cookie'
 import { assert } from './utils'
-
 const jar = new CookieJar()
 const requester = wrapper(
   axios.create({
@@ -19,40 +18,44 @@ export async function getRoomInfo(
   roomId: string
   owner: string
   title: string
-  streams: StreamProfile[]
+  streams: StreamProfile[] 
   sources: SourceProfile[]
 }> {
-  const res = await requester.get<EnterRoomApiResp>(
-    'https://live.douyin.com/webcast/web/enter/',
-    {
-      params: {
-        aid: 6383,
-        live_id: 1,
-        device_platform: 'web',
-        language: 'zh-CN',
-        enter_from: 'web_live',
-        cookie_enabled: 'true',
-        screen_width: 1920,
-        screen_height: 1080,
-        browser_language: 'zh-CN',
-        browser_platform: 'MacIntel',
-        browser_name: 'Chrome',
-        browser_version: '108.0.0.0',
-        web_rid: webRoomId,
-        // enter_source:,
-        'Room-Enter-User-Login-Ab': 0,
-        is_need_double_stream: 'false',
-      },
-    }
-  )
+    await requester.get(
+        'https://live.douyin.com/',
+    )
+
+    const res = await requester.get<EnterRoomApiResp>(
+    'https://live.douyin.com/webcast/room/web/enter/',
+        {
+        params: {
+            aid: 6383,
+            live_id: 1,
+            device_platform: 'web',
+            language: 'zh-CN',
+            enter_from: 'web_live',
+            cookie_enabled: 'true',
+            screen_width: 1920,
+            screen_height: 1080,
+            browser_language: 'zh-CN',
+            browser_platform: 'MacIntel',
+            browser_name: 'Chrome',
+            browser_version: '108.0.0.0',
+            web_rid: webRoomId,
+            // enter_source:,
+            'Room-Enter-User-Login-Ab': 0,
+            is_need_double_stream: 'false',
+        },
+        }
+    )
+  
 
   // 无 cookie 时 code 为 10037
   if (res.data.status_code === 10037 && retryOnSpecialCode) {
     // resp 自动设置 cookie
     await requester.get('https://live.douyin.com/favicon.ico')
     return getRoomInfo(webRoomId, false)
-  }
-
+  }   
   assert(
     res.data.status_code === 0,
     `Unexpected resp, code ${res.data.status_code}, msg ${res.data.data}`
