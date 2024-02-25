@@ -8,12 +8,12 @@ const requester = wrapper(
   axios.create({
     timeout: 10e3,
     jar,
-  })
+  }),
 )
 
 export async function getRoomInfo(
   webRoomId: string,
-  retryOnSpecialCode = true
+  retryOnSpecialCode = true,
 ): Promise<{
   living: boolean
   roomId: string
@@ -22,36 +22,30 @@ export async function getRoomInfo(
   streams: StreamProfile[]
   sources: SourceProfile[]
 }> {
-    // 抖音的 'webcast/room/web/enter' api 会需要 ttwid 的 cookie，这个 cookie 是由这个请求的响应头设置的，
-    // 所以在这里请求一次自动设置。
-    await requester.get(
-        'https://live.douyin.com/',
-    )
+  // 抖音的 'webcast/room/web/enter' api 会需要 ttwid 的 cookie，这个 cookie 是由这个请求的响应头设置的，
+  // 所以在这里请求一次自动设置。
+  await requester.get('https://live.douyin.com/')
 
-    const res = await requester.get<EnterRoomApiResp>(
-    'https://live.douyin.com/webcast/room/web/enter/',
-        {
-        params: {
-            aid: 6383,
-            live_id: 1,
-            device_platform: 'web',
-            language: 'zh-CN',
-            enter_from: 'web_live',
-            cookie_enabled: 'true',
-            screen_width: 1920,
-            screen_height: 1080,
-            browser_language: 'zh-CN',
-            browser_platform: 'MacIntel',
-            browser_name: 'Chrome',
-            browser_version: '108.0.0.0',
-            web_rid: webRoomId,
-            // enter_source:,
-            'Room-Enter-User-Login-Ab': 0,
-            is_need_double_stream: 'false',
-        },
-        }
-    )
-  
+  const res = await requester.get<EnterRoomApiResp>('https://live.douyin.com/webcast/room/web/enter/', {
+    params: {
+      aid: 6383,
+      live_id: 1,
+      device_platform: 'web',
+      language: 'zh-CN',
+      enter_from: 'web_live',
+      cookie_enabled: 'true',
+      screen_width: 1920,
+      screen_height: 1080,
+      browser_language: 'zh-CN',
+      browser_platform: 'MacIntel',
+      browser_name: 'Chrome',
+      browser_version: '108.0.0.0',
+      web_rid: webRoomId,
+      // enter_source:,
+      'Room-Enter-User-Login-Ab': 0,
+      is_need_double_stream: 'false',
+    },
+  })
 
   // 无 cookie 时 code 为 10037
   if (res.data.status_code === 10037 && retryOnSpecialCode) {
@@ -59,11 +53,8 @@ export async function getRoomInfo(
     await requester.get('https://live.douyin.com/favicon.ico')
     return getRoomInfo(webRoomId, false)
   }
-  
-  assert(
-    res.data.status_code === 0,
-    `Unexpected resp, code ${res.data.status_code}, msg ${res.data.data}`
-  )
+
+  assert(res.data.status_code === 0, `Unexpected resp, code ${res.data.status_code}, msg ${res.data.data}`)
 
   const data = res.data.data
   const room = data.data[0]
@@ -201,7 +192,7 @@ interface EnterRoomApiResp {
         scene_type_info: unknown
         toolbar_data: unknown
         room_cart: unknown
-      }
+      },
     ]
     enter_room_id: string
     extra: {

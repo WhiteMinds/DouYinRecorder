@@ -29,6 +29,7 @@
     "@types/node": "*",
     "@types/ramda": "^0.28.16",
     "@types/tough-cookie": "^4.0.2",
+    "prettier": "^3.2.5",
     "typescript": "^4.8.4"
   },
   "peerDependencies": {
