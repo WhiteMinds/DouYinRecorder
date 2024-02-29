@@ -63,12 +63,12 @@ export async function getRoomInfo(
   const data = res.data.data
   const room = data.data[0]
 
-  if (room.stream_url == null) {
+  if (room?.stream_url == null) {
     return {
       living: false,
       roomId: webRoomId,
       owner: data.user.nickname,
-      title: room.title,
+      title: room?.title ?? data.user.nickname,
       streams: [],
       sources: [],
     }
@@ -119,87 +119,88 @@ export interface SourceProfile {
 interface EnterRoomApiResp {
   data: {
     data: [
-      {
-        id_str: string
-        status: number
-        status_str: string
-        title: string
-        user_count_str: string
-        cover: {
-          url_list: string[]
-        }
-        stream_url?: {
-          flv_pull_url: PullURLMap
-          default_resolution: string
-          hls_pull_url_map: PullURLMap
-          hls_pull_url: string
-          stream_orientation: number
-          live_core_sdk_data: {
-            pull_data: {
-              options: {
-                default_quality: QualityInfo
-                qualities: QualityInfo[]
-              }
-              stream_data: string
-            }
-          }
-          extra: {
-            height: number
-            width: number
-            fps: number
-            max_bitrate: number
-            min_bitrate: number
-            default_bitrate: number
-            bitrate_adapt_strategy: number
-            anchor_interact_profile: number
-            audience_interact_profile: number
-            hardware_encode: boolean
-            video_profile: number
-            h265_enable: boolean
-            gop_sec: number
-            bframe_enable: boolean
-            roi: boolean
-            sw_roi: boolean
-            bytevc1_enable: boolean
-          }
-          pull_datas: unknown
-        }
-        mosaic_status: number
-        mosaic_status_str: string
-        admin_user_ids: number[]
-        admin_user_ids_str: string[]
-        owner: UserInfo
-        room_auth: unknown
-        live_room_mode: number
-        stats: {
-          total_user_desp: string
-          like_count: number
-          total_user_str: string
+      | undefined
+      | {
+          id_str: string
+          status: number
+          status_str: string
+          title: string
           user_count_str: string
-        }
-        has_commerce_goods: boolean
-        linker_map: {}
-        linker_detail: unknown
-        room_view_stats: {
-          is_hidden: boolean
-          display_short: string
-          display_middle: string
-          display_long: string
-          display_value: number
-          display_version: number
-          incremental: boolean
-          display_type: number
-          display_short_anchor: string
-          display_middle_anchor: string
-          display_long_anchor: string
-        }
-        scene_type_info: unknown
-        toolbar_data: unknown
-        room_cart: unknown
-      },
+          cover: {
+            url_list: string[]
+          }
+          stream_url?: {
+            flv_pull_url: PullURLMap
+            default_resolution: string
+            hls_pull_url_map: PullURLMap
+            hls_pull_url: string
+            stream_orientation: number
+            live_core_sdk_data: {
+              pull_data: {
+                options: {
+                  default_quality: QualityInfo
+                  qualities: QualityInfo[]
+                }
+                stream_data: string
+              }
+            }
+            extra: {
+              height: number
+              width: number
+              fps: number
+              max_bitrate: number
+              min_bitrate: number
+              default_bitrate: number
+              bitrate_adapt_strategy: number
+              anchor_interact_profile: number
+              audience_interact_profile: number
+              hardware_encode: boolean
+              video_profile: number
+              h265_enable: boolean
+              gop_sec: number
+              bframe_enable: boolean
+              roi: boolean
+              sw_roi: boolean
+              bytevc1_enable: boolean
+            }
+            pull_datas: unknown
+          }
+          mosaic_status: number
+          mosaic_status_str: string
+          admin_user_ids: number[]
+          admin_user_ids_str: string[]
+          owner: UserInfo
+          room_auth: unknown
+          live_room_mode: number
+          stats: {
+            total_user_desp: string
+            like_count: number
+            total_user_str: string
+            user_count_str: string
+          }
+          has_commerce_goods: boolean
+          linker_map: {}
+          linker_detail: unknown
+          room_view_stats: {
+            is_hidden: boolean
+            display_short: string
+            display_middle: string
+            display_long: string
+            display_value: number
+            display_version: number
+            incremental: boolean
+            display_type: number
+            display_short_anchor: string
+            display_middle_anchor: string
+            display_long_anchor: string
+          }
+          scene_type_info: unknown
+          toolbar_data: unknown
+          room_cart: unknown
+        },
     ]
     enter_room_id: string
-    extra: {
+    extra?: {
       digg_color: string
       pay_scores: string
       is_official_channel: boolean
@@ -209,10 +210,10 @@ interface EnterRoomApiResp {
     qrcode_url: string
     enter_mode: number
     room_status: number
-    partition_road_map: unknown
+    partition_road_map?: unknown
     similar_rooms: unknown[]
     shark_decision_conf: string
-    web_stream_url: unknown
+    web_stream_url?: unknown
   }
   extra: { now: number }
   status_code: number
