@@ -8,6 +8,10 @@ const requester = wrapper(
   axios.create({
     timeout: 10e3,
     jar,
+    // axios 会自动读取环境变量中的 http_proxy 和 https_proxy 并应用，这会让请求发往代理的 host。
+    // 于是 set-cookie 的 domain 与请求的 host 无法匹配上，tough-cookie 在检查时会丢弃它，导致 cookie 丢失。
+    // 所以这里需要主动禁用代理功能。
+    proxy: false,
   }),
 )
 
