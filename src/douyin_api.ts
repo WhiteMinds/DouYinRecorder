@@ -58,7 +58,10 @@ export async function getRoomInfo(
     return getRoomInfo(webRoomId, false)
   }
 
-  assert(res.data.status_code === 0, `Unexpected resp, code ${res.data.status_code}, msg ${res.data.data}`)
+  assert(
+    res.data.status_code === 0,
+    `Unexpected resp, code ${res.data.status_code}, msg ${res.data.data}, id ${webRoomId}`,
+  )
 
   const data = res.data.data
   const room = data.data[0]

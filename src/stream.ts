@@ -1,7 +1,7 @@
 import { Qualities, Recorder } from '@autorecord/manager'
 import { getRoomInfo, SourceProfile, StreamProfile } from './douyin_api'
 import * as R from 'ramda'
-import { assert, getValuesFromArrayLikeFlexSpaceBetween } from './utils'
+import { getValuesFromArrayLikeFlexSpaceBetween } from './utils'
 
 export async function getInfo(channelId: string): Promise<{
   living: boolean
